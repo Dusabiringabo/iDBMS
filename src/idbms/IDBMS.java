@@ -26,6 +26,7 @@ public class IDBMS {
         // Let the user enter a command
         String input = sc.nextLine();
         String[] tokens = idh.tokenizeLine(input);
+        //hashtable that contains main database
         Hashtable<String,Hashtable<String,LinkedList<String>>> db = new Hashtable<String,Hashtable<String,LinkedList<String>>>();
         
         /* Have used hash table as it stores a key-value pair, and retrive value from hash table 
@@ -64,7 +65,7 @@ public class IDBMS {
             db.put(tableName, ht);
             } 
         }}catch(Exception e){
-            System.err.println("Invalid SQL command, or table already exists!"); 
+            System.err.println("Invalid SQL command, or table already exists in the database!"); 
         }
         
         /*
@@ -76,7 +77,8 @@ public class IDBMS {
             */
          
         try{
-        if(tokens[0].toUpperCase().compareTo("insert".toUpperCase())== 0 && idh.isInsertdmlOK(input)){
+        if(tokens[0].toUpperCase().compareTo("insert".toUpperCase())== 0 && idh.isInsertdmlOK(input)
+          && db.contains(tokens[2])){
             String[] columns = idh.tokenizeColsAndVals(tokens[3]);
             String[] values = idh.tokenizeColsAndVals(tokens[5]);
        
@@ -88,7 +90,7 @@ public class IDBMS {
                 ht.put(columns[i], list);
             }
         }}catch(Exception e){
-            System.err.println("Invalid SQL command, try again!");
+            System.err.println("Invalid SQL command or table does not exist in the database!");
         }
         
         /*
@@ -98,7 +100,8 @@ public class IDBMS {
         are normaly not long to cause probllems.
         */
         try{
-        if(tokens[0].toUpperCase().compareTo("select".toUpperCase())== 0 && idh.isSelectdmlOK(input)){
+        if(tokens[0].toUpperCase().compareTo("select".toUpperCase())== 0 && idh.isSelectdmlOK(input)
+          && db.contains(tokens[3])){
             String[] selectedVal = idh.tokenizeColsAndVals(tokens[1]);
                 
                 // fetching where clause
@@ -115,7 +118,7 @@ public class IDBMS {
                 }            
             }
         }}catch(Exception e){
-            System.err.println("Invalid SQL command, try again!");
+            System.err.println("Invalid SQL command or table does not exist in the database!");
         }
     }    
 }
